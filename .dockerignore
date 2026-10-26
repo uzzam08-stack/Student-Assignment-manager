@@ -1,0 +1,9 @@
+.venv
+.pytest_cache
+__pycache__
+*.pyc
+.git
+.DS_Store
+c_engine/build
+c_engine/bin/*.dylib
+assignments_data.csv.tmp

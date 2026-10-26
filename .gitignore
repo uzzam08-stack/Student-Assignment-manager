@@ -1,0 +1,27 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# C Build Artifacts & Binaries
+c_engine/build/
+c_engine/bin/
+*.o
+*.dylib
+*.a
+
+# Local data & temp files
+assignments_data.csv
+assignments_data.csv.tmp
+/tmp/test_sapm_*
+
+# OS artifacts
+.DS_Store
+Thumbs.db
