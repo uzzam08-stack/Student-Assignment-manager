@@ -1,0 +1,7 @@
+id,title,subject,deadline,priority,sequence_num,status
+1,Linked List Implementation,Data Structures,2026-11-01,HIGH,5,PENDING
+2,Differential Equations Worksheet,Mathematics,2026-11-03,MEDIUM,6,PENDING
+3,Operating Systems Virtual Memory Lab,Computer Science,2026-10-30,URGENT,7,PENDING
+4,Digital Logic Assignment,Computer Engineering,2026-11-05,LOW,8,PENDING
+102,Math Homework,Math,2026-10-31,URGENT,2,COMPLETED
+201,Cloud Computing Report,Distributed Systems,2026-10-31,URGENT,3,COMPLETED

@@ -15,6 +15,10 @@ build:
 	@mkdir -p public
 	@cp -f index.html public/index.html
 	@echo "Static frontend ready in public/."
+	@mkdir -p backend
+	@cp -f c_engine/bin/libc_engine.so backend/libc_engine.so 2>/dev/null || true
+	@cp -f c_engine/bin/libc_engine.dylib backend/libc_engine.dylib 2>/dev/null || true
+	@echo "Copied shared library to backend/."
 
 test: build
 	@echo "Running C engine test suite..."

@@ -7,18 +7,19 @@ env/
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
 .pytest_cache/
 
-# C Build Artifacts & Binaries
+# Local C builds & macOS binaries
 c_engine/build/
 c_engine/bin/
-*.o
+backend/*.so
+backend/*.dylib
 *.dylib
+*.o
 *.a
+*.dSYM/
 
-# Local data & temp files
-assignments_data.csv
+# Local temp test files
 assignments_data.csv.tmp
 /tmp/test_sapm_*
 

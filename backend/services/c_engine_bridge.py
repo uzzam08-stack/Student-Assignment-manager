@@ -126,6 +126,8 @@ class CEngineBridge:
         if not os.path.exists(lib_path):
             # Try alternate extension or location
             base_dir = Path(__file__).resolve().parent.parent.parent
+            this_dir = Path(__file__).resolve().parent
+            backend_dir = this_dir.parent
             candidates = [
                 lib_path,
                 lib_path.replace(".dylib", ".so"),
@@ -134,9 +136,18 @@ class CEngineBridge:
                 os.path.join(os.path.dirname(lib_path), "libc_engine.so"),
                 str(base_dir / "c_engine" / "bin" / "libc_engine.so"),
                 str(base_dir / "c_engine" / "bin" / "libc_engine.dylib"),
+                str(base_dir / "backend" / "libc_engine.so"),
+                str(base_dir / "backend" / "libc_engine.dylib"),
+                str(backend_dir / "libc_engine.so"),
+                str(backend_dir / "libc_engine.dylib"),
+                str(this_dir / "libc_engine.so"),
+                str(base_dir / "libc_engine.so"),
                 os.path.join(os.getcwd(), "c_engine", "bin", "libc_engine.so"),
                 os.path.join(os.getcwd(), "c_engine", "bin", "libc_engine.dylib"),
+                os.path.join(os.getcwd(), "backend", "libc_engine.so"),
                 "/var/task/c_engine/bin/libc_engine.so",
+                "/var/task/backend/libc_engine.so",
+                "/var/task/libc_engine.so",
             ]
             for cand in candidates:
                 if os.path.exists(cand):
