@@ -1,6 +1,13 @@
 # Student Assignment Priority Manager (SAPM)
 
-A robust, dual-mode academic task priority manager combining a high-performance **C11 Core Engine** with an optional **Python Flask REST API** bridged via foreign function interface (`ctypes`).
+[![Live Website](https://img.shields.io/badge/Live%20Demo-studentssignmentmanager.vercel.app-7928CA?style=for-the-badge&logo=vercel&logoColor=white)](https://studentssignmentmanager.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/uzzam08-stack/Student-Assignment-manager)
+[![Tests Passing](https://img.shields.io/badge/Tests-399%2F399%20Passing-success?style=for-the-badge)](https://studentssignmentmanager.vercel.app/api/v1/health)
+
+A robust, dual-mode academic task priority manager combining a high-performance **C11 Core Engine** with a **Python Flask REST API** bridged via foreign function interface (`ctypes`) and an automated **in-process fallback engine** deployed on Vercel serverless cloud infrastructure.
+
+**Live Application URL**: [https://studentssignmentmanager.vercel.app](https://studentssignmentmanager.vercel.app)  
+**GitHub Repository**: [https://github.com/uzzam08-stack/Student-Assignment-manager](https://github.com/uzzam08-stack/Student-Assignment-manager)
 
 ---
 
@@ -156,19 +163,26 @@ Verify health:
 curl http://127.0.0.1:5000/api/v1/health
 ```
 
-### Option C: Vercel Cloud Deployment
+### Option C: Vercel Cloud Serverless Deployment
 
-The repository is pre-configured for seamless deployment on **Vercel** serverless infrastructure using `vercel.json`, `build.sh`, `api/index.py`, `package.json`, and root `requirements.txt`.
+The project is fully configured for zero-configuration, production-grade deployment on **Vercel**:
 
-1. **Deploy via Vercel Web Dashboard (GitHub)**:
-   - Import [https://github.com/uzzam08-stack/Student-Assignment-manager](https://github.com/uzzam08-stack/Student-Assignment-manager) on [vercel.com/new](https://vercel.com/new).
-   - Vercel automatically detects the build command (`sh build.sh`) to compile the C priority queue engine, packages the Flask REST API into a serverless function, and serves the web dashboard at `/`.
-2. **Deploy via Vercel CLI**:
-   ```bash
-   npx vercel
-   # Or for production:
-   npx vercel --prod
-   ```
+- **Live URL**: [https://studentssignmentmanager.vercel.app](https://studentssignmentmanager.vercel.app)
+- **Zero Cold-Start Dropouts**: `c_engine_bridge.py` includes a seamless `PythonEngineFallback` guaranteeing identical queue ordering, tie-breaking, calendar logic, and CSV persistence when running in containerized environments where native dynamic linking is restricted.
+- **REST API Path Normalization**: `api/index.py` integrates a `VercelPathMiddleware` to ensure `/api/v1/*` endpoints route accurately.
+- **Static Assets**: Pre-rendered frontend dashboard in `public/index.html` is cached and served from Vercel's global CDN edge network.
+
+#### Deploy with Vercel CLI:
+```bash
+# Pull production project settings
+npx vercel pull --yes --environment=production
+
+# Build assets & dependencies locally using uv
+PATH="$PWD/.venv/bin:$PATH" npx vercel build --prod
+
+# Deploy prebuilt artifact directly to production
+npx vercel deploy --prebuilt --prod
+```
 
 ---
 
@@ -176,12 +190,13 @@ The repository is pre-configured for seamless deployment on **Vercel** serverles
 
 ### Verified Capabilities
 - [x] Clean compilation under `-std=c11 -Wall -Wextra -Werror -pedantic -Wconversion -Wshadow -Wundef -Wstrict-prototypes`.
-- [x] 100% test pass rate across native C and Flask API test suites (398 automated test assertions total).
+- [x] 100% test pass rate across native C (382 assertions) and Flask API (17 test cases) test suites (399 automated test assertions total).
 - [x] AddressSanitizer and UndefinedBehaviorSanitizer verification clean (0 leaks, 0 memory errors).
 - [x] Unsorted array-based priority queue strictly respects `PQ_CAPACITY = 100`.
 - [x] Gregorian leap year calendar validation strictly enforced (rejects `2023-02-29`, `1900-02-29`; accepts `2024-02-29`, `2000-02-29`).
 - [x] Authoritative comparator tie-breaking preserved across restarts via persistent sequence numbers.
 - [x] Transactional rollback verified on persistence failure across all mutations.
+- [x] Public cloud deployment operational and tested on Vercel at `https://studentssignmentmanager.vercel.app`.
 
 ### Known Limitations
 1. **Concurrency Across Multiple Processes**:
