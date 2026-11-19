@@ -2,22 +2,13 @@
   "version": 2,
   "functions": {
     "api/index.py": {
-      "includeFiles": [
-        "backend/**",
-        "assignments_data.csv",
-        "public/**",
-        "index.html"
-      ]
+      "includeFiles": "{backend/**,assignments_data.csv,public/**,index.html}"
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/api/index"
+      "destination": "/api/index/$1"
     }
   ]
 }

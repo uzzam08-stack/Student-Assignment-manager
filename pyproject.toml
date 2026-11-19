@@ -1,6 +1,14 @@
+[project]
+name = "student-assignment-manager"
+version = "1.0.0"
+description = "Student Assignment Priority Manager"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "Flask>=3.0.0",
+    "gunicorn>=21.2.0"
+]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["backend/tests"]
-
-[tool.vercel.scripts]
-build = "make build"

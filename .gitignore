@@ -26,3 +26,5 @@ assignments_data.csv.tmp
 # OS artifacts
 .DS_Store
 Thumbs.db
+.vercel
+.env*

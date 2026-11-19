@@ -24,12 +24,11 @@ class VercelPathMiddleware:
         self.wsgi_app = wsgi_app
 
     def __call__(self, environ, start_response):
-        matched_path = environ.get("HTTP_X_MATCHED_PATH")
-        if matched_path:
-            environ["PATH_INFO"] = matched_path
-        elif environ.get("PATH_INFO", "").startswith("/api/index"):
-            remainder = environ["PATH_INFO"][len("/api/index") :]
-            environ["PATH_INFO"] = remainder if remainder else "/"
+        path = environ.get("PATH_INFO", "")
+        if path.startswith("/api/index/"):
+            environ["PATH_INFO"] = "/api/" + path[len("/api/index/") :]
+        elif path == "/api/index":
+            environ["PATH_INFO"] = "/api"
         return self.wsgi_app(environ, start_response)
 
 
