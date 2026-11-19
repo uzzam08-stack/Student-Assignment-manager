@@ -1,0 +1,10 @@
+{
+  "name": "student-assignment-priority-manager",
+  "version": "1.0.0",
+  "description": "Student Assignment Priority Manager with C priority queue engine and Flask REST API",
+  "private": true,
+  "scripts": {
+    "build": "sh build.sh",
+    "vercel-build": "sh build.sh"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "buildCommand": "sh build.sh",
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "{c_engine/**,backend/**,index.html,assignments_data.csv}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

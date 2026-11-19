@@ -156,6 +156,20 @@ Verify health:
 curl http://127.0.0.1:5000/api/v1/health
 ```
 
+### Option C: Vercel Cloud Deployment
+
+The repository is pre-configured for seamless deployment on **Vercel** serverless infrastructure using `vercel.json`, `build.sh`, `api/index.py`, `package.json`, and root `requirements.txt`.
+
+1. **Deploy via Vercel Web Dashboard (GitHub)**:
+   - Import [https://github.com/uzzam08-stack/Student-Assignment-manager](https://github.com/uzzam08-stack/Student-Assignment-manager) on [vercel.com/new](https://vercel.com/new).
+   - Vercel automatically detects the build command (`sh build.sh`) to compile the C priority queue engine, packages the Flask REST API into a serverless function, and serves the web dashboard at `/`.
+2. **Deploy via Vercel CLI**:
+   ```bash
+   npx vercel
+   # Or for production:
+   npx vercel --prod
+   ```
+
 ---
 
 ## 5. Verification Checklist & Known Limitations

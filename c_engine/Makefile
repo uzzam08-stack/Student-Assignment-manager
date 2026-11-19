@@ -1,4 +1,16 @@
-CC ?= clang
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    CC ?= clang
+    SHLIB_EXT = dylib
+    SHLIB_FLAGS = -dynamiclib
+    SHLIB_SO_TARGET = $(BIN_DIR)/libc_engine.so
+else
+    CC ?= gcc
+    SHLIB_EXT = so
+    SHLIB_FLAGS = -shared
+    SHLIB_SO_TARGET =
+endif
+
 CFLAGS ?= -std=c11 -Wall -Wextra -Werror -pedantic -Wconversion -Wshadow -Wundef -Wstrict-prototypes -Iinclude -O2 -g -fPIC
 
 SRC_DIR = src
@@ -6,15 +18,6 @@ INC_DIR = include
 TEST_DIR = tests
 BUILD_DIR = build
 BIN_DIR = bin
-
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Darwin)
-    SHLIB_EXT = dylib
-    SHLIB_FLAGS = -dynamiclib
-else
-    SHLIB_EXT = so
-    SHLIB_FLAGS = -shared
-endif
 
 CORE_OBJS = $(BUILD_DIR)/date_utils.o \
             $(BUILD_DIR)/assignment.o \
@@ -26,13 +29,12 @@ TEST_ENGINE_BIN = $(BIN_DIR)/test_engine
 TEST_STORAGE_BIN = $(BIN_DIR)/test_storage
 CLI_BIN = $(BIN_DIR)/sapm_cli
 SHLIB = $(BIN_DIR)/libc_engine.$(SHLIB_EXT)
-SHLIB_SO = $(BIN_DIR)/libc_engine.so
 
 .PHONY: all test clean shared_lib
 
-all: $(TEST_ENGINE_BIN) $(TEST_STORAGE_BIN) $(CLI_BIN) $(SHLIB) $(SHLIB_SO)
+all: $(TEST_ENGINE_BIN) $(TEST_STORAGE_BIN) $(CLI_BIN) $(SHLIB) $(SHLIB_SO_TARGET)
 
-shared_lib: $(SHLIB) $(SHLIB_SO)
+shared_lib: $(SHLIB) $(SHLIB_SO_TARGET)
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -55,9 +57,9 @@ $(CLI_BIN): $(CORE_OBJS) $(SRC_DIR)/main.c | $(BIN_DIR)
 $(SHLIB): $(CORE_OBJS) | $(BIN_DIR)
 	$(CC) $(SHLIB_FLAGS) $(CORE_OBJS) -o $@
 
-$(SHLIB_SO): $(SHLIB) | $(BIN_DIR)
-ifeq ($(SHLIB_EXT),dylib)
-	cp -f $(SHLIB) $(SHLIB_SO)
+ifeq ($(UNAME_S),Darwin)
+$(BIN_DIR)/libc_engine.so: $(SHLIB) | $(BIN_DIR)
+	cp -f $(SHLIB) $@
 endif
 
 test: $(TEST_ENGINE_BIN) $(TEST_STORAGE_BIN)

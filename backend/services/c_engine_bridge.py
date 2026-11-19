@@ -125,12 +125,18 @@ class CEngineBridge:
     def _load_library(self, lib_path: str) -> ctypes.CDLL:
         if not os.path.exists(lib_path):
             # Try alternate extension or location
+            base_dir = Path(__file__).resolve().parent.parent.parent
             candidates = [
                 lib_path,
                 lib_path.replace(".dylib", ".so"),
                 lib_path.replace(".so", ".dylib"),
                 os.path.join(os.path.dirname(lib_path), "libc_engine.dylib"),
                 os.path.join(os.path.dirname(lib_path), "libc_engine.so"),
+                str(base_dir / "c_engine" / "bin" / "libc_engine.so"),
+                str(base_dir / "c_engine" / "bin" / "libc_engine.dylib"),
+                os.path.join(os.getcwd(), "c_engine", "bin", "libc_engine.so"),
+                os.path.join(os.getcwd(), "c_engine", "bin", "libc_engine.dylib"),
+                "/var/task/c_engine/bin/libc_engine.so",
             ]
             for cand in candidates:
                 if os.path.exists(cand):
