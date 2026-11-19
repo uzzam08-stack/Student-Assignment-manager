@@ -1,31 +1,23 @@
 {
   "version": 2,
-  "installCommand": "pip install -r requirements.txt",
-  "buildCommand": "make build",
-  "outputDirectory": "public",
   "functions": {
     "api/index.py": {
       "includeFiles": [
-        "c_engine/**",
         "backend/**",
+        "assignments_data.csv",
         "public/**",
-        "index.html",
-        "assignments_data.csv"
+        "index.html"
       ]
     }
   },
   "rewrites": [
     {
-      "source": "/api/test",
-      "destination": "/api/test.py"
-    },
-    {
       "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "destination": "/api/index"
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/api/index"
     }
   ]
 }

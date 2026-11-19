@@ -1,6 +1,7 @@
 import os
 import shutil
 from pathlib import Path
+from typing import Optional, Type
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -69,7 +70,7 @@ CONFIG_MAP = {
 }
 
 
-def get_config(env_name: str | None = None) -> type[Config]:
+def get_config(env_name: Optional[str] = None) -> Type[Config]:
     """Retrieves configuration class by name or from environment."""
     if env_name is None:
         env_name = os.environ.get("FLASK_ENV", "development").lower()

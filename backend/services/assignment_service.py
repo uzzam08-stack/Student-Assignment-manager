@@ -94,8 +94,26 @@ class AssignmentService:
                     byref(first_run)
                 )
                 if res not in (SAPM_SUCCESS, SAPM_SUCCESS_FIRST_RUN):
-                    err_msg = self.bridge.status_to_string(res)
-                    raise StorageError(f"Failed to load assignment data from '{self.data_filepath}': {err_msg}")
+                    if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+                        try:
+                            from pathlib import Path
+                            import shutil
+                            bundled = Path(__file__).resolve().parent.parent.parent / "assignments_data.csv"
+                            if bundled.exists() and str(bundled) != self.data_filepath:
+                                shutil.copyfile(str(bundled), self.data_filepath)
+                                self.bridge._lib.pq_init(byref(self._pq))
+                                self.bridge._lib.history_init(byref(self._hist))
+                                res = self.bridge._lib.storage_load(
+                                    self.data_filepath.encode("utf-8"),
+                                    byref(self._pq),
+                                    byref(self._hist),
+                                    byref(first_run)
+                                )
+                        except Exception:
+                            pass
+                    if res not in (SAPM_SUCCESS, SAPM_SUCCESS_FIRST_RUN):
+                        err_msg = self.bridge.status_to_string(res)
+                        raise StorageError(f"Failed to load assignment data from '{self.data_filepath}': {err_msg}")
 
     def _snapshot_state(self) -> Tuple[bytes, bytes]:
         """Creates binary memory snapshots of the C structs for rollback."""

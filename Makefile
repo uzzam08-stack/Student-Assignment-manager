@@ -24,7 +24,7 @@ test: build
 	@echo "Running C engine test suite..."
 	$(MAKE) -C c_engine test
 	@echo "Running backend pytest suite..."
-	python3 -m pytest backend/tests/test_api.py -v
+	@if [ -x .venv/bin/pytest ]; then .venv/bin/pytest backend/tests/test_api.py -v; else python3 -m pytest backend/tests/test_api.py -v; fi
 
 run: build
 	@echo "Starting Student Assignment Priority Manager on http://$(HOST):$(PORT)..."

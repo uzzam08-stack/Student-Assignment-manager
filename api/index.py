@@ -12,44 +12,29 @@ os.environ.setdefault("VERCEL", "1")
 if "SAPM_DATA_FILEPATH" not in os.environ:
     os.environ["SAPM_DATA_FILEPATH"] = "/tmp/assignments_data.csv"
 
-# Attempt compilation if missing (e.g. if build step didn't bundle)
-c_lib_so = ROOT_DIR / "c_engine" / "bin" / "libc_engine.so"
-c_lib_dylib = ROOT_DIR / "c_engine" / "bin" / "libc_engine.dylib"
-backend_so = ROOT_DIR / "backend" / "libc_engine.so"
-if not c_lib_so.exists() and not c_lib_dylib.exists() and not backend_so.exists():
-    import subprocess
-    try:
-        subprocess.run(["make", "-C", str(ROOT_DIR / "c_engine"), "shared_lib"], check=False)
-    except Exception:
-        pass
+from backend.app import create_app
 
-try:
-    from backend.app import create_app
-    app = create_app()
-except Exception as e:
-    import traceback
-    err_tb = traceback.format_exc()
-    from flask import Flask, jsonify
-    app = Flask(__name__)
+app = create_app()
 
-    @app.route("/", defaults={"path": ""}, methods=["GET", "POST", "PATCH", "DELETE", "PUT"])
-    @app.route("/<path:path>", methods=["GET", "POST", "PATCH", "DELETE", "PUT"])
-    def debug_handler(path=""):
-        c_engine_dir = ROOT_DIR / "c_engine"
-        bin_dir = c_engine_dir / "bin"
-        backend_dir = ROOT_DIR / "backend"
-        return jsonify({
-            "status": "error",
-            "code": "C_ENGINE_INIT_ERROR",
-            "message": str(e),
-            "traceback": err_tb.splitlines(),
-            "cwd": os.getcwd(),
-            "root_dir": str(ROOT_DIR),
-            "c_engine_exists": c_engine_dir.exists(),
-            "bin_exists": bin_dir.exists(),
-            "bin_files": [f.name for f in bin_dir.iterdir()] if bin_dir.exists() else [],
-            "backend_so_exists": (backend_dir / "libc_engine.so").exists(),
-        }), 500
+
+class VercelPathMiddleware:
+    """Ensures PATH_INFO matches the original client request path on Vercel."""
+
+    def __init__(self, wsgi_app):
+        self.wsgi_app = wsgi_app
+
+    def __call__(self, environ, start_response):
+        matched_path = environ.get("HTTP_X_MATCHED_PATH")
+        if matched_path:
+            environ["PATH_INFO"] = matched_path
+        elif environ.get("PATH_INFO", "").startswith("/api/index"):
+            remainder = environ["PATH_INFO"][len("/api/index") :]
+            environ["PATH_INFO"] = remainder if remainder else "/"
+        return self.wsgi_app(environ, start_response)
+
+
+# Apply middleware to Flask WSGI stack
+app.wsgi_app = VercelPathMiddleware(app.wsgi_app)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
