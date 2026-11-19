@@ -1,9 +1,10 @@
 {
   "version": 2,
   "buildCommand": "make build",
+  "outputDirectory": "public",
   "functions": {
     "api/index.py": {
-      "includeFiles": "{c_engine/**,backend/**,index.html,assignments_data.csv}"
+      "includeFiles": "{c_engine/**,backend/**,public/**,index.html,assignments_data.csv}"
     }
   },
   "rewrites": [

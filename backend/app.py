@@ -79,7 +79,9 @@ def create_app(config_object: Optional[Any] = None) -> Flask:
     @app.route("/", methods=["GET"])
     @app.route("/index.html", methods=["GET"])
     def serve_frontend():
-        index_path = BASE_DIR / "index.html"
+        index_path = BASE_DIR / "public" / "index.html"
+        if not index_path.exists():
+            index_path = BASE_DIR / "index.html"
         if index_path.exists():
             return send_file(index_path, mimetype="text/html")
         return jsonify({"message": "Student Assignment Priority Manager"}), 200

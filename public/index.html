@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Assignment Priority Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050506;--panel:#09080d;--panel2:#0d0b12;--text:#f7f5fb;--muted:#b8b2c4;
+  --purple:#b77bff;--purple2:#7929f4;--cyan:#92f1ed;--line:rgba(183,123,255,.45);
+  --line-soft:rgba(183,123,255,.2);--danger:#ff7fae;--success:#8df0c8;
+  --radius:22px;--max:1220px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Space Grotesk",Arial,sans-serif;line-height:1.5}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at 88% 8%,rgba(104,27,220,.13),transparent 27%),radial-gradient(ellipse at 7% 46%,rgba(80,30,150,.08),transparent 30%)}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.wrap{width:min(var(--max),calc(100% - 56px));margin:auto}
+.topbar{height:86px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line-soft)}
+.brand{display:flex;align-items:center;gap:12px;font-family:"Michroma",sans-serif;font-size:12px;letter-spacing:.12em}
+.brand-mark{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),#8b69ff 55%,#b02cff);transform:rotate(-10deg);box-shadow:0 0 26px #7b28ef66}
+.nav{display:flex;align-items:center;gap:28px;color:#d6d0df;font-size:13px}
+.nav a:hover{color:var(--purple)}
+.btn{border:1px solid var(--line);color:white;background:transparent;border-radius:999px;padding:11px 18px;display:inline-flex;align-items:center;justify-content:center;gap:10px;transition:.2s}
+.btn:hover{border-color:var(--purple);box-shadow:0 0 25px #8228ff33;transform:translateY(-1px)}
+.btn.primary{border-color:transparent;background:linear-gradient(110deg,#7a2af3,#be7bff);color:#fff;font-weight:700}
+.btn.small{padding:7px 12px;font-size:12px}
+.hero{padding:70px 0 54px;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:40px;min-height:370px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);margin-bottom:18px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(42px,6vw,78px);line-height:1.02;letter-spacing:-.055em;font-weight:500;margin-bottom:22px;max-width:720px}
+.grad{color:var(--purple);font-weight:700}
+.hero p{max-width:530px;color:#c3bdcc;font-size:16px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.hero-art{min-height:250px;position:relative;display:flex;align-items:center;justify-content:center}
+.orb{position:absolute;border-radius:42% 58% 64% 36% / 40% 35% 65% 60%;filter:drop-shadow(0 0 28px #8227ef55);background:linear-gradient(135deg,#9cf7ed 0%,#7ec9e5 35%,#9d72ff 68%,#a529f2 100%);transform:rotate(-24deg)}
+.orb.one{width:115px;height:155px;left:19%;top:19%;transform:rotate(22deg)}
+.orb.two{width:100px;height:133px;left:42%;top:31%;transform:rotate(-27deg);background:linear-gradient(145deg,#c9c4ff,#9b6aff 55%,#7a21e9)}
+.flower{width:142px;height:142px;position:absolute;right:12%;top:15%;animation:float 7s ease-in-out infinite}
+.flower i{position:absolute;left:46px;top:0;width:48px;height:83px;border-radius:60% 60% 40% 40%;background:linear-gradient(140deg,#a5f8ed,#8b6aff 72%,#bd31fa);transform-origin:50% 72%}
+.flower i:nth-child(2){transform:rotate(60deg)}.flower i:nth-child(3){transform:rotate(120deg)}.flower i:nth-child(4){transform:rotate(180deg)}.flower i:nth-child(5){transform:rotate(240deg)}.flower i:nth-child(6){transform:rotate(300deg)}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-12px) rotate(8deg)}}
+.rule{height:1px;background:linear-gradient(90deg,transparent,var(--purple),rgba(183,123,255,.15),transparent);margin:0}
+.section{padding:42px 0}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:28px;margin-bottom:26px}
+h2{font-size:clamp(27px,3.6vw,44px);font-weight:500;letter-spacing:-.04em;line-height:1.1;margin-bottom:8px}
+.section-head p{color:var(--muted);max-width:410px;margin-bottom:0;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+.stat{border:1px solid var(--line-soft);border-radius:var(--radius);padding:20px;background:linear-gradient(145deg,#0c0a11,#070709);position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;right:-30px;top:-40px;width:95px;height:95px;background:radial-gradient(circle,#7c2cf455,transparent 70%)}
+.stat-label{color:var(--muted);font-size:12px}
+.stat-number{font-size:36px;letter-spacing:-.05em;margin-top:7px;font-weight:500}
+.stat-note{font-size:11px;color:var(--purple);margin-top:2px}
+.layout{display:grid;grid-template-columns:1.45fr .75fr;gap:18px;align-items:start}
+.panel{border:1px solid var(--line-soft);border-radius:var(--radius);background:linear-gradient(145deg,rgba(15,12,21,.92),rgba(7,7,9,.96));overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:20px 22px;border-bottom:1px solid var(--line-soft)}
+.panel-head h3{font-size:17px;font-weight:500;margin:0}
+.panel-body{padding:18px 22px}
+.controls{display:flex;gap:8px;align-items:center}
+.field{width:100%;background:#070609;border:1px solid rgba(183,123,255,.28);color:white;border-radius:12px;padding:11px 12px;outline:none;min-width:0}
+.field:focus{border-color:var(--purple);box-shadow:0 0 0 3px #9e56ff1c}
+select.field option{background:#0b0910}
+.search{max-width:200px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.filter{background:transparent;border:1px solid var(--line-soft);border-radius:999px;padding:7px 12px;color:#cfc8d9;font-size:12px}
+.filter.active,.filter:hover{background:#7f36d426;border-color:var(--line);color:#fff}
+.assignment-list{display:flex;flex-direction:column;gap:10px}
+.assignment{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:15px;border:1px solid rgba(183,123,255,.19);border-radius:16px;padding:15px;background:#08070b}
+.assignment:hover{border-color:var(--line)}
+.assignment-title{font-weight:600;font-size:14px;margin-bottom:3px;overflow-wrap:anywhere}
+.assignment-meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.assignment-right{display:flex;align-items:flex-start;gap:7px;flex-direction:column}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:700;letter-spacing:.04em;border:1px solid}
+.badge.urgent{color:#ff7092;border-color:#ff4d7366;background:#ff4d7318}
+.badge.high{color:#ff9fc2;border-color:#ff7fae66;background:#ff7fae13}
+.badge.medium{color:#d2a9ff;border-color:#b77bff66;background:#b77bff12}
+.badge.low{color:#9df0e8;border-color:#92f1ed66;background:#92f1ed0d}
+.badge.overdue{color:#ff9fc2;border-color:#ff7fae66}
+.item-actions{display:flex;gap:6px;margin-top:8px}
+.icon-btn{background:transparent;border:1px solid var(--line-soft);color:#d9d1e4;border-radius:9px;padding:5px 8px;font-size:11px}
+.icon-btn:hover{border-color:var(--purple);color:white}
+.empty{padding:32px 15px;text-align:center;color:var(--muted);font-size:13px}
+.next-card{padding:22px;min-height:220px;position:relative;background:radial-gradient(ellipse at 100% 0%,#7825e044,transparent 46%),#09080c}
+.next-card .tiny{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan)}
+.next-card h3{font-size:24px;line-height:1.15;letter-spacing:-.035em;margin:15px 0 8px;font-weight:500}
+.next-card p{color:var(--muted);font-size:12px}
+.next-priority{margin:15px 0 18px}
+.tip{margin-top:14px;border:1px solid var(--line-soft);border-radius:16px;padding:16px;color:var(--muted);font-size:12px}
+.tip strong{color:var(--purple);display:block;margin-bottom:5px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+label{font-size:11px;color:#c9c1d3;display:block;margin-bottom:6px}
+.modal-backdrop{position:fixed;inset:0;background:#000b;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.modal-backdrop.show{display:flex}
+.modal{width:min(540px,100%);background:#0b0910;border:1px solid var(--line);border-radius:24px;box-shadow:0 25px 100px #000b;overflow:hidden}
+.modal .panel-head{padding:20px 24px}
+.modal .panel-body{padding:22px 24px}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:#15101e;border:1px solid var(--line);padding:11px 17px;border-radius:999px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:20}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.footer{padding:30px 0 36px;display:flex;justify-content:space-between;gap:20px;align-items:center;color:#8f879b;font-size:11px}
+.footer-brand{font-family:"Michroma",sans-serif;letter-spacing:.1em;color:#ddd6e7}
+@media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:50px}.hero-art{min-height:190px;grid-row:1}.hero-copy{grid-row:2}.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.nav{gap:14px}.section-head{display:block}.section-head p{margin-top:10px}}
+@media(max-width:560px){.wrap{width:min(100% - 30px,var(--max))}.topbar{height:72px}.nav a:not(.btn){display:none}.brand{font-size:10px}.hero{padding:35px 0 35px;gap:8px}.hero-art{min-height:155px}.orb.one{width:78px;height:105px}.orb.two{width:70px;height:95px}.flower{transform:scale(.72);right:6%;top:0}.hero p{font-size:14px}.stats{gap:9px}.stat{padding:14px}.stat-number{font-size:29px}.panel-head{padding:16px}.panel-body{padding:14px}.search{max-width:100%}.controls{width:100%}.panel-head{align-items:flex-start;flex-direction:column}.assignment{padding:12px;grid-template-columns:1fr}.assignment-right{flex-direction:row;align-items:center;justify-content:space-between}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.footer{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="wrap topbar">
+  <a class="brand" href="#"><span class="brand-mark"></span><span>STUDENT <span style="color:var(--purple)">✳</span> PRIORITY</span></a>
+  <nav class="nav"><a href="#dashboard">Dashboard</a><a href="#assignments">Assignments</a><a href="#how-it-works">How it works</a><button class="btn primary small" id="topAdd">+ Add assignment</button></nav>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <div class="hero-copy">
+      <div class="eyebrow">Your academic command centre</div>
+      <h1>Own your<br><span class="grad">deadlines.</span></h1>
+      <p>One clear view of every assignment. Focus on what matters next, with priority and deadlines working together.</p>
+      <div class="hero-actions"><button class="btn primary" id="heroAdd">+ Add assignment <span>↗</span></button><a class="btn" href="#assignments">View pending ↓</a></div>
+    </div>
+    <div class="hero-art" aria-hidden="true"><div class="orb one"></div><div class="orb two"></div><div class="flower"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  </section>
+
+  <div class="wrap"><div class="rule"></div></div>
+
+  <section class="wrap section" id="dashboard">
+    <div class="section-head"><div><div class="eyebrow">A little more organised</div><h2>Your <span class="grad">overview</span></h2></div><p>Stay on top of the workload without losing sight of the next important thing.</p></div>
+    <div class="stats">
+      <article class="stat"><div class="stat-label">Pending assignments</div><div class="stat-number" id="pendingCount">0</div><div class="stat-note">Still on your list</div></article>
+      <article class="stat"><div class="stat-label">High priority</div><div class="stat-number" id="highCount">0</div><div class="stat-note">Needs extra attention</div></article>
+      <article class="stat"><div class="stat-label">Due today</div><div class="stat-number" id="todayCount">0</div><div class="stat-note">Make time for these</div></article>
+      <article class="stat"><div class="stat-label">Completed</div><div class="stat-number" id="completedCount">0</div><div class="stat-note">Progress, not perfection</div></article>
+    </div>
+
+    <div class="layout" id="assignments">
+      <section class="panel">
+        <div class="panel-head"><h3>Pending <span class="grad">assignments</span></h3><div class="controls"><input class="field search" id="searchInput" type="search" placeholder="Search assignments…"></div></div>
+        <div class="panel-body">
+          <div class="filters">
+            <button class="filter active" data-filter="all">All tasks</button>
+            <button class="filter" data-filter="4">Urgent</button>
+            <button class="filter" data-filter="3">High</button>
+            <button class="filter" data-filter="2">Medium</button>
+            <button class="filter" data-filter="1">Low</button>
+            <button class="filter" data-filter="overdue">Overdue</button>
+          </div>
+          <div class="assignment-list" id="assignmentList"></div>
+        </div>
+      </section>
+
+      <aside>
+        <section class="panel next-card">
+          <div class="tiny">✳ Recommended next</div>
+          <div id="nextAssignment"><h3>You're all caught up.</h3><p>Add an assignment to see what should come first.</p></div>
+          <button class="btn primary small" id="processNext">Mark as completed ↗</button>
+        </section>
+        <div class="tip" id="how-it-works"><strong>How priority works</strong>High (3) comes first, then Medium (2), then Low (1). If priorities match, the closest deadline wins.</div>
+        <div style="margin-top:14px;display:flex;gap:9px"><button class="btn small" id="showCompleted">View completed</button><button class="btn small" id="resetDemo">Reset demo</button></div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div class="wrap"><div class="rule"></div></div>
+<footer class="wrap footer"><div class="footer-brand">STUDENT ✳ PRIORITY</div><div>Plan clearly. Work intentionally. Submit on time.</div><div>Array-based priority queue concept</div></footer>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="panel-head"><h3 id="modalTitle">Add <span class="grad">assignment</span></h3><button class="icon-btn" id="closeModal" aria-label="Close">✕</button></div>
+    <div class="panel-body">
+      <form id="assignmentForm">
+        <div class="form-grid">
+          <div class="full"><label for="title">Assignment title</label><input class="field" id="title" maxlength="100" required placeholder="e.g. Linked List Lab Report"></div>
+          <div><label for="subject">Subject</label><input class="field" id="subject" maxlength="50" required placeholder="e.g. Data Structures"></div>
+          <div><label for="deadline">Deadline</label><input class="field" id="deadline" type="date" required></div>
+          <div class="full"><label for="priority">Priority</label><select class="field" id="priority"><option value="4">Urgent — 4</option><option value="3">High — 3</option><option value="2" selected>Medium — 2</option><option value="1">Low — 1</option></select></div>
+        </div>
+        <div class="modal-actions"><button type="button" class="btn" id="cancelModal">Cancel</button><button class="btn primary" type="submit">Save assignment ↗</button></div>
+      </form>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const API_BASE = "/api/v1";
+const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
+function escapeHTML(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function dateLabel(s){if(!s)return "No deadline";const d=new Date(s+"T00:00:00");return d.toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});}
+function isOverdue(x){return x.status==="PENDING" && x.deadline < todayISO();}
+function priorityName(p){
+  if (typeof p === "string") return p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
+  return p==4?"Urgent":p==3?"High":p==2?"Medium":"Low";
+}
+function priorityValue(p){
+  if (typeof p === "number") return p;
+  const map = { "LOW": 1, "MEDIUM": 2, "HIGH": 3, "URGENT": 4 };
+  return map[p] || 2;
+}
+
+let pendingItems = [];
+let historyItems = [];
+let currentFilter = "all";
+let showingCompleted = false;
+let nextHighestItem = null;
+
+async function apiCall(endpoint, method="GET", body=null) {
+  const options = {
+    method,
+    headers: { "Content-Type": "application/json", "Accept": "application/json" }
+  };
+  if (body) options.body = JSON.stringify(body);
+  const res = await fetch(`${API_BASE}${endpoint}`, options);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const errorMsg = data.message || (data.details ? data.details.join(", ") : `HTTP ${res.status}`);
+    throw new Error(errorMsg);
+  }
+  return data;
+}
+
+async function loadData() {
+  try {
+    // 1. Fetch statistics from C engine
+    const statsRes = await apiCall("/statistics");
+    const stats = statsRes.data;
+    nextHighestItem = stats.next_highest_assignment;
+    
+    document.getElementById("pendingCount").textContent = stats.total_pending;
+    const highAndUrgent = (stats.priority_breakdown?.HIGH || 0) + (stats.priority_breakdown?.URGENT || 0);
+    document.getElementById("highCount").textContent = highAndUrgent;
+    document.getElementById("completedCount").textContent = stats.total_completed;
+
+    // Update Recommended Next Card
+    const nextBox = document.getElementById("nextAssignment");
+    const processBtn = document.getElementById("processNext");
+    if (nextHighestItem) {
+      const pName = priorityName(nextHighestItem.priority);
+      nextBox.innerHTML = `<h3>${escapeHTML(nextHighestItem.title)}</h3>
+        <p>${escapeHTML(nextHighestItem.subject)} · Due ${dateLabel(nextHighestItem.deadline)}</p>
+        <div class="next-priority">
+          <span class="badge ${pName.toLowerCase()}">${pName.toUpperCase()} PRIORITY</span>
+          ${isOverdue(nextHighestItem) ? ' <span class="badge overdue">OVERDUE</span>' : ''}
+        </div>`;
+      processBtn.disabled = false;
+      processBtn.style.opacity = "1";
+    } else {
+      nextBox.innerHTML = `<h3>You're all caught up.</h3><p>Add an assignment to see what should come first.</p>`;
+      processBtn.disabled = true;
+      processBtn.style.opacity = ".5";
+    }
+
+    // 2. Fetch pending assignments sorted authoritatively by C engine
+    const assignRes = await apiCall("/assignments?sorted=true");
+    pendingItems = assignRes.data || [];
+    document.getElementById("todayCount").textContent = pendingItems.filter(x => x.deadline === todayISO()).length;
+
+    // 3. If showing completed, fetch history
+    if (showingCompleted) {
+      const histRes = await apiCall("/history");
+      historyItems = histRes.data || [];
+    }
+
+    renderList();
+  } catch (err) {
+    console.error("Failed to load assignments:", err);
+    toast("Error loading data: " + err.message);
+  }
+}
+
+function renderList() {
+  const query = document.getElementById("searchInput").value.trim().toLowerCase();
+  let list = showingCompleted ? [...historyItems] : [...pendingItems];
+
+  if (!showingCompleted) {
+    if (currentFilter === "overdue") {
+      list = list.filter(isOverdue);
+    } else if (["1", "2", "3", "4"].includes(currentFilter)) {
+      list = list.filter(x => String(priorityValue(x.priority_level || x.priority)) === currentFilter);
+    }
+  }
+
+  if (query) {
+    list = list.filter(x => (x.title + " " + x.subject + " " + x.id).toLowerCase().includes(query));
+  }
+
+  const root = document.getElementById("assignmentList");
+  if (!list.length) {
+    root.innerHTML = `<div class="empty">${showingCompleted ? "No completed assignments yet." : "No assignments match this view. Add one to get started."}</div>`;
+    return;
+  }
+
+  root.innerHTML = list.map(x => {
+    const pName = priorityName(x.priority);
+    const overdueBadge = isOverdue(x) ? '<span style="color:var(--danger)">· Overdue</span>' : '';
+    const actions = x.status === "PENDING"
+      ? `<button class="icon-btn" onclick="editAssignment(${x.id})">Edit</button>
+         <button class="icon-btn" onclick="completeAssignment(${x.id})">Complete ✓</button>
+         <button class="icon-btn" onclick="deleteAssignment(${x.id})">Delete</button>`
+      : `<span style="font-size:11px;color:var(--muted)">Archived in history</span>`;
+
+    return `<article class="assignment">
+      <div>
+        <div class="assignment-title">${escapeHTML(x.title)}</div>
+        <div class="assignment-meta">
+          <span>${escapeHTML(x.subject)}</span>
+          <span>·</span>
+          <span>Due ${dateLabel(x.deadline)}</span>
+          ${overdueBadge}
+        </div>
+        <div class="item-actions">${actions}</div>
+      </div>
+      <div class="assignment-right">
+        <span class="badge ${pName.toLowerCase()}">${pName.toUpperCase()}</span>
+        ${x.status === "COMPLETED" ? '<span class="badge low">COMPLETED</span>' : ''}
+      </div>
+    </article>`;
+  }).join("");
+}
+
+function openModal(edit=null) {
+  const backdrop = document.getElementById("modalBackdrop");
+  backdrop.classList.add("show");
+  const form = document.getElementById("assignmentForm");
+  form.dataset.editId = edit ? edit.id : "";
+  document.getElementById("modalTitle").innerHTML = edit ? 'Edit <span class="grad">assignment</span>' : 'Add <span class="grad">assignment</span>';
+  
+  const titleField = document.getElementById("title");
+  const subjectField = document.getElementById("subject");
+  titleField.value = edit ? edit.title : "";
+  subjectField.value = edit ? edit.subject : "";
+  titleField.disabled = !!edit;
+  subjectField.disabled = !!edit;
+
+  document.getElementById("deadline").value = edit ? edit.deadline : todayISO();
+  document.getElementById("priority").value = edit ? priorityValue(edit.priority_level || edit.priority) : 2;
+  setTimeout(() => (edit ? document.getElementById("deadline") : titleField).focus(), 50);
+}
+
+function closeModal() {
+  document.getElementById("modalBackdrop").classList.remove("show");
+}
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+function editAssignment(id) {
+  const x = pendingItems.find(x => x.id === id);
+  if (x) openModal(x);
+}
+
+async function completeAssignment(id) {
+  try {
+    await apiCall(`/assignments/${id}/process`, "POST");
+    toast("Assignment marked completed.");
+    await loadData();
+  } catch (err) {
+    toast("Failed: " + err.message);
+  }
+}
+
+async function deleteAssignment(id) {
+  const x = pendingItems.find(x => x.id === id);
+  if (!x) return;
+  if (confirm(`Delete "${x.title}" permanently?`)) {
+    try {
+      await apiCall(`/assignments/${id}`, "DELETE");
+      toast("Assignment deleted.");
+      await loadData();
+    } catch (err) {
+      toast("Delete failed: " + err.message);
+    }
+  }
+}
+
+document.getElementById("topAdd").onclick = () => openModal();
+document.getElementById("heroAdd").onclick = () => openModal();
+document.getElementById("closeModal").onclick = closeModal;
+document.getElementById("cancelModal").onclick = closeModal;
+document.getElementById("modalBackdrop").addEventListener("click", e => { if (e.target.id === "modalBackdrop") closeModal(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+document.getElementById("assignmentForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const title = document.getElementById("title").value.trim();
+  const subject = document.getElementById("subject").value.trim();
+  const deadline = document.getElementById("deadline").value;
+  const priority = Number(document.getElementById("priority").value);
+  const editId = e.currentTarget.dataset.editId ? Number(e.currentTarget.dataset.editId) : null;
+
+  if (editId) {
+    try {
+      await apiCall(`/assignments/${editId}`, "PATCH", { priority, deadline });
+      toast("Assignment updated.");
+      closeModal();
+      await loadData();
+    } catch (err) {
+      toast("Update failed: " + err.message);
+    }
+  } else {
+    if (!title || !subject || !deadline) {
+      toast("Please complete every field.");
+      return;
+    }
+    // Generate unique ID based on existing items
+    const allIds = [...pendingItems.map(x => x.id), ...historyItems.map(x => x.id)];
+    const id = (allIds.length ? Math.max(...allIds) : 0) + 1;
+
+    try {
+      await apiCall("/assignments", "POST", { id, title, subject, deadline, priority });
+      toast("Assignment added.");
+      closeModal();
+      await loadData();
+    } catch (err) {
+      toast("Failed to add: " + err.message);
+    }
+  }
+});
+
+document.getElementById("processNext").onclick = async () => {
+  if (!nextHighestItem) return;
+  if (confirm(`Mark "${nextHighestItem.title}" as completed?`)) {
+    try {
+      await apiCall("/assignments/process-next", "POST");
+      toast("Assignment completed.");
+      await loadData();
+    } catch (err) {
+      toast("Process failed: " + err.message);
+    }
+  }
+};
+
+document.getElementById("searchInput").addEventListener("input", renderList);
+
+document.querySelectorAll(".filter").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".filter").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  currentFilter = b.dataset.filter;
+  showingCompleted = false;
+  document.getElementById("showCompleted").textContent = "View completed";
+  renderList();
+}));
+
+document.getElementById("showCompleted").onclick = async () => {
+  showingCompleted = !showingCompleted;
+  document.getElementById("showCompleted").textContent = showingCompleted ? "View pending" : "View completed";
+  document.querySelectorAll(".filter").forEach(x => x.classList.remove("active"));
+  document.querySelector('[data-filter="all"]').classList.add("active");
+  currentFilter = "all";
+  await loadData();
+};
+
+document.getElementById("resetDemo").onclick = async () => {
+  if (!confirm("Add demo assignments to the priority queue?")) return;
+  const demoSeed = [
+    { title: "Linked List Implementation", subject: "Data Structures", deadline: todayISO(), priority: 3 },
+    { title: "Differential Equations Worksheet", subject: "Mathematics", deadline: todayISO(), priority: 2 },
+    { title: "Operating Systems Memory Lab", subject: "Computer Science", deadline: todayISO(), priority: 4 },
+    { title: "Digital Logic Assignment", subject: "Computer Engineering", deadline: todayISO(), priority: 1 },
+  ];
+  try {
+    for (const item of demoSeed) {
+      const allIds = [...pendingItems.map(x => x.id), ...historyItems.map(x => x.id)];
+      const id = (allIds.length ? Math.max(...allIds) : 0) + 1;
+      await apiCall("/assignments", "POST", { id, ...item }).catch(() => {});
+      pendingItems.push({ id });
+    }
+    toast("Demo coursework loaded into queue.");
+    await loadData();
+  } catch (err) {
+    toast("Reset error: " + err.message);
+  }
+};
+
+// Initial load
+loadData();
+</script>
+</body>
+</html>
+

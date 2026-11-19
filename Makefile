@@ -12,6 +12,9 @@ build:
 	@echo "Building C core priority queue engine..."
 	$(MAKE) -C c_engine shared_lib
 	@echo "C shared library ready."
+	@mkdir -p public
+	@cp -f index.html public/index.html
+	@echo "Static frontend ready in public/."
 
 test: build
 	@echo "Running C engine test suite..."
