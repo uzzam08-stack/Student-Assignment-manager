@@ -26,16 +26,14 @@ if not c_lib_so.exists() and not c_lib_dylib.exists() and not backend_so.exists(
 try:
     from backend.app import create_app
     app = create_app()
-    handler = app
 except Exception as e:
     import traceback
     err_tb = traceback.format_exc()
     from flask import Flask, jsonify
-    err_app = Flask(__name__)
-    handler = err_app
+    app = Flask(__name__)
 
-    @err_app.route("/api/v1/health")
-    @err_app.route("/api/<path:path>", methods=["GET", "POST", "PATCH", "DELETE"])
+    @app.route("/", defaults={"path": ""}, methods=["GET", "POST", "PATCH", "DELETE", "PUT"])
+    @app.route("/<path:path>", methods=["GET", "POST", "PATCH", "DELETE", "PUT"])
     def debug_handler(path=""):
         c_engine_dir = ROOT_DIR / "c_engine"
         bin_dir = c_engine_dir / "bin"
@@ -52,8 +50,6 @@ except Exception as e:
             "bin_files": [f.name for f in bin_dir.iterdir()] if bin_dir.exists() else [],
             "backend_so_exists": (backend_dir / "libc_engine.so").exists(),
         }), 500
-
-    app = err_app
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
