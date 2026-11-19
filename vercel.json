@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "sh build.sh",
+  "buildCommand": "make build",
   "functions": {
     "api/index.py": {
       "includeFiles": "{c_engine/**,backend/**,index.html,assignments_data.csv}"

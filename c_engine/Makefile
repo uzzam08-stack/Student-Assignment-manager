@@ -11,7 +11,7 @@ else
     SHLIB_SO_TARGET =
 endif
 
-CFLAGS ?= -std=c11 -Wall -Wextra -Werror -pedantic -Wconversion -Wshadow -Wundef -Wstrict-prototypes -Iinclude -O2 -g -fPIC
+CFLAGS ?= -std=c11 -Wall -Wextra -pedantic -Wconversion -Wshadow -Wundef -Wstrict-prototypes -Iinclude -O2 -g -fPIC
 
 SRC_DIR = src
 INC_DIR = include

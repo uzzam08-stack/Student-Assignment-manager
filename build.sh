@@ -1,7 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 set -e
-
-echo "=== Vercel Build: Compiling C Priority Queue Engine ==="
+echo "Building C priority queue engine..."
 make -C c_engine shared_lib
-echo "=== Build Complete: C engine shared library created ==="
-ls -la c_engine/bin/
+echo "Build complete."
